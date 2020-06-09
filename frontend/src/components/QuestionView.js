@@ -12,7 +12,7 @@ class QuestionView extends Component {
       questions: [],
       page: 1,
       totalQuestions: 0,
-      categories: {},
+      categories: [],
       currentCategory: null,
     }
   }
@@ -23,7 +23,7 @@ class QuestionView extends Component {
 
   getQuestions = () => {
     $.ajax({
-      url: `/questions?page=${this.state.page}`, //TODO: update request URL
+      url: `http://localhost:5000/questions?page=${this.state.page}`,
       type: "GET",
       success: (result) => {
         this.setState({
@@ -34,6 +34,7 @@ class QuestionView extends Component {
         return;
       },
       error: (error) => {
+        console.log(error)
         alert('Unable to load questions. Please try your request again')
         return;
       }
@@ -60,7 +61,7 @@ class QuestionView extends Component {
 
   getByCategory= (id) => {
     $.ajax({
-      url: `/categories/${id}/questions`, //TODO: update request URL
+      url: `/categories/${id}/questions`,
       type: "GET",
       success: (result) => {
         this.setState({
@@ -78,7 +79,7 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `/questions`, //TODO: update request URL
+      url: `http://localhost:5000/questions/search`,
       type: "POST",
       dataType: 'json',
       contentType: 'application/json',
@@ -105,7 +106,7 @@ class QuestionView extends Component {
     if(action === 'DELETE') {
       if(window.confirm('are you sure you want to delete the question?')) {
         $.ajax({
-          url: `/questions/${id}`, //TODO: update request URL
+          url: `http://localhost:5000/questions/${id}`,
           type: "DELETE",
           success: (result) => {
             this.getQuestions();
@@ -125,10 +126,10 @@ class QuestionView extends Component {
         <div className="categories-list">
           <h2 onClick={() => {this.getQuestions()}}>Categories</h2>
           <ul>
-            {Object.keys(this.state.categories).map((id, ) => (
+            {this.state.categories.map(({id, type}) => (
               <li key={id} onClick={() => {this.getByCategory(id)}}>
-                {this.state.categories[id]}
-                <img className="category" src={`${this.state.categories[id]}.svg`}/>
+                {type}
+                <img alt="category name" className="category" src={`${type}.svg`}/>
               </li>
             ))}
           </ul>
@@ -141,7 +142,7 @@ class QuestionView extends Component {
               key={q.id}
               question={q.question}
               answer={q.answer}
-              category={this.state.categories[q.category]} 
+              category={this.state.categories.filter(c => c.id === q.category)[0].type} 
               difficulty={q.difficulty}
               questionAction={this.questionAction(q.id)}
             />
