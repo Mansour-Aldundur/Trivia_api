@@ -89,6 +89,235 @@ GET '/categories'
 
 ```
 
+## Endpoints
+```
+GET '/categories'
+GET '/questions'
+DELETE '/questions/<question_id>'
+POST '/questions'
+POST '/questions/search'
+GET '/categories/<category_id>/questions'
+POST '/quizzes'
+```
+
+GET '/categories'
+- Fetches all question categories
+- Request Arguments: None
+- Response:
+```
+{
+  "success": true,
+  "status": 200,
+  "message": successfully fetched all categories
+  "categories": [
+    {
+      "id": 1,
+      "type": "Science"
+    },
+    {
+      "id": 2,
+      "type": "Art"
+    },
+    {
+      "id": 3,
+      "type": "Geography"
+    },
+    {
+      "id": 4,
+      "type": "History"
+    },
+    {
+      "id": 5,
+      "type": "Entertainment"
+    },
+    {
+      "id": 6,
+      "type": "Sports"
+    }
+  ]
+}
+```
+GET '/questions'
+- Fetches all questions and categories
+- Request Arguments: None
+- Response: 
+```
+{
+  "success": true,
+  "status': 200,
+  "message": "successfully fetched questions",
+  "questions": [
+    {
+      "answer": "Jackson Pollock",
+      "category": 2,
+      "difficulty": 2,
+      "id": 19,
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    },
+    {
+      "answer": "The Liver",
+      "category": 1,
+      "difficulty": 4,
+      "id": 20,
+      "question": "What is the heaviest organ in the human body?"
+    },
+  ],
+  "total_questions": 2,
+  "categories": [
+    {
+      "id": 1,
+      "type": "Science"
+    },
+    {
+      "id": 2,
+      "type": "Art"
+    },
+  ]
+}
+```
+
+DELETE '/questions/<question_id>'
+- Deletes the question with the specified id
+- Request Arguments: question_id
+- Response:
+```
+{
+  "success": true,
+  "status": 200,
+  "message": "successfully deleted question"
+}
+```
+
+POST '/questions'
+- Creates a new question based on the request body
+- Request Body:
+```
+ {
+    "question": "Name an antiviral medicine used for a clinical trial by Gilead Sciences for COVID-19 treatment?",
+    "answer": "Remdesivir",
+    "difficulty": 5,
+    "category": 1
+  }
+```
+- Response:
+```
+{
+  "success": true,
+  "status": 201,
+  "message": "successfully created a question",
+  "created_question": 28 #new question id
+}
+```
+POST '/questions/search'
+- Fetches all questions that contain the search term
+- Request Body: 
+```
+{
+    'searchTerm': 'Clay'
+}
+```
+- Response: 
+```
+{
+  "success": true,
+  "status": 200,
+  "message": "successfully found questions",
+  "questions": [
+    {
+      "answer": "Muhammad Ali",
+      "category": 4,
+      "difficulty": 1,
+      "id": 9,
+      "question": "What boxer's original name is Cassius Clay?"
+    }
+  ]
+}
+```
+GET '/categories/<category_id>/questions'
+- Fetches all questions for the specified category
+- Request Arguments: category_id
+- Response:
+```
+{
+  "success": true,
+  "status": 200,
+  "message": "successfully returned questions by category",
+  "questions": [
+    {
+      "answer": "The Liver",
+      "category": 1,
+      "difficulty": 4,
+      "id": 20,
+      "question": "What is the heaviest organ in the human body?"
+    },
+    {
+      "answer": "Alexander Fleming",
+      "category": 1,
+      "difficulty": 3,
+      "id": 21,
+      "question": "Who discovered penicillin?"
+    }
+  ]
+}
+```
+
+POST '/quizzes'
+- Fetches a random question when playing the trivia
+- Request Body:
+```
+ {
+	"previous_questions": [],
+	"quiz_category": {
+		"type": "History",
+		"id": 4
+	}
+} 
+```
+- Response:
+```
+{
+  "question": {
+    "answer": "George Washington Carver",
+    "category": 4,
+    "difficulty": 2,
+    "id": 12,
+    "question": "Who invented Peanut Butter?"
+  }
+}
+```
+
+The server returns these types of errors
+```
+400 - Bad Request
+  {
+    "success": false, 
+    "error": 400,
+    "message": "bad request"
+  }
+
+404 - Resource Not Found
+  {
+    "success": false, 
+    "error": 404,
+    "message": "resource not found"
+  }
+
+422 - Unprocessable entity
+  {
+    "success": false, 
+    "error": 422,
+    "message": "unprocessable
+  }
+
+405 - Method not allowed
+  {
+    "success": false, 
+    "error": 405,
+    "message": "Method not allowed"
+  }
+```
+
+
 
 ## Testing
 To run the tests, run

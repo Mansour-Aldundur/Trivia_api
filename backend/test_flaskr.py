@@ -15,29 +15,30 @@ class TriviaTestCase(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client
         self.database_name = "trivia_test"
-        self.database_path = "postgres://{}/{}".format('localhost:5432', self.database_name)
+        self.database_path = "postgres://{}/{}".format(
+            'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
-        # testing variables 
-        self.new_question={
-            'question':'Name an antiviral medicine used for a clinical trial by Gilead Sciences for COVID-19 treatment?',
-            'answer':'Remdesivir',
-            'difficulty': 5, 
+        # testing variables
+        self.new_question = {
+            'question': 'Name an antiviral medicine used for a clinical trial by Gilead Sciences for COVID-19 treatment?',
+            'answer': 'Remdesivir',
+            'difficulty': 5,
             'category': 1,
         }
 
         self.invalid_question = {
-            'answer':'Remdesivir',
-            'category':1,
+            'answer': 'Remdesivir',
+            'category': 1,
         }
-        self.new_question2 =  {
+        self.new_question2 = {
             'question': '........tests favipiravir as a COVID-19 treatment',
             'answer': 'Fijifilms',
             'difficulty': 4,
             'category': 1,
         }
-        self.search_term ={
-            'searchTerm':'medicine'
+        self.search_term = {
+            'searchTerm': 'medicine'
         }
         self.play_quiz_params = {
             'previous_questions': [],
@@ -49,21 +50,18 @@ class TriviaTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
-    
+
     def tearDown(self):
         """Executed after reach test"""
         pass
 
-    """
-    TODO
-    Write at least one test for each test for successful operation and for expected errors.
-    """
     def test_get_categories(self):
         res = self.client().get('/categories')
         data = json.loads(res.data)
 
         self.assertEqual(data['status'], 200)
-        self.assertEqual(data['message'], 'successfully fetched all categories')
+        self.assertEqual(
+            data['message'], 'successfully fetched all categories')
         self.assertTrue(data['categories'])
 
     def test_post_question(self):
@@ -99,8 +97,8 @@ class TriviaTestCase(unittest.TestCase):
 
         self.assertEqual(data['status'], 404)
         self.assertEqual(data['message'], 'resource not found')
-        self.assertEqual(data['success'], False)  
-    
+        self.assertEqual(data['success'], False)
+
     def test_delete_question(self):
         init_res = self.client().post('/questions', json=self.new_question2)
         question_to_delete = json.loads(init_res.data)['created_question']
@@ -108,11 +106,12 @@ class TriviaTestCase(unittest.TestCase):
         res = self.client().delete(f'/questions/{question_to_delete}')
         data = json.loads(res.data)
 
-        deleted_question = Question.query.filter_by(id=question_to_delete).one_or_none()
+        deleted_question = Question.query.filter_by(
+            id=question_to_delete).one_or_none()
 
         self.assertEqual(data['status'], 200)
         self.assertEqual(data['message'], 'successfully deleted question')
-        self.assertEqual(deleted_question, None) 
+        self.assertEqual(deleted_question, None)
 
     def test_405_unallowed_method(self):
         res = self.client().post(f'/questions/404')
@@ -143,7 +142,8 @@ class TriviaTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(data['status'], 200)
-        self.assertEqual(data['message'], 'successfully returned questions by category')
+        self.assertEqual(
+            data['message'], 'successfully returned questions by category')
         self.assertTrue(data['questions'])
 
     def test_play_quiz(self):
@@ -151,8 +151,10 @@ class TriviaTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(data['status'], 200)
-        self.assertEqual(data['message'], 'successfully returned questions by category')
-        self.assertTrue(data['question'])    
+        self.assertEqual(
+            data['message'], 'successfully returned questions by category')
+        self.assertTrue(data['question'])
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
